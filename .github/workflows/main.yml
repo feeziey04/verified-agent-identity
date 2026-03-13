@@ -4,43 +4,46 @@ on:
   workflow_dispatch:
     inputs:
       agent_name:
-        description: 'feeziey04'
+        description: 'feeziey'
         required: true
-        default: 'feeziey04'
+        default: 'feeziey'
       agent_description:
-        description: 'feeziey04'
+        description: 'feeziey'
         required: true
-        default: 'feeziey04 AI Agent'
+        default: 'feeziey AI Agent'
 
 jobs:
   verify:
     runs-on: ubuntu-latest
 
-    # Force Node.js 24 for all JS actions to remove deprecation warnings
-    env:
-      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      # 1️⃣ Checkout the repository
+      - name: Checkout repo
+        uses: actions/checkout@v3
 
+      # 2️⃣ Set up Node.js (use the latest LTS you prefer)
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v3
         with:
-          node-version: 24  # Node runtime for scripts
+          node-version: '20'
 
-      - name: Step 1 - Install ClawHub skill
-        run: npx clawhub@latest install verified-agent-identity --force
+      # 3️⃣ Install the ClawHub skill (optional – keep if you need it)
+      - name: Install ClawHub skill
+        run: npx clawhub@latest install verified-agent-identity
 
+      # 4️⃣ Install script dependencies
       - name: Install script dependencies
-        run: |
-          cd scripts
-          npm install
+        run: npm install
+        working-directory: ./scripts
 
+      # 5️⃣ Create a new Ethereum identity
       - name: Step 2 - Create new Ethereum Identity
-        run: node scripts/createNewEthereumIdentity.js
+        run: node createNewEthereumIdentity.js
+        working-directory: ./scripts
 
+      # 6️⃣ Link the human to the agent
       - name: Step 3 - Link Human to Agent
         run: |
-          node scripts/manualLinkHumanToAgent.js \
-          --challenge "{\"name\":\"${{ github.event.inputs.agent_name }}\",\"description\":\"${{ github.event.inputs.agent_description }}\"}"
+          node manualLinkHumanToAgent.js \
+            --challenge '{"name": "feeziey", "description": "feeziey AI Agent"}'
+        working-directory: ./scripts
