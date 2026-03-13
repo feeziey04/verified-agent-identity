@@ -28,9 +28,8 @@ jobs:
           node-version: '20'
 
       # 3️⃣ Install the ClawHub skill (optional – keep if you need it)
-      - name: Install ClawHub skill
-        run: npx clawhub@latest install verified-agent-identity
-
+      - name: Install Verified Agent Identity
+        run: npx clawhub@latest install verified-agent-identity --force
       # 4️⃣ Install script dependencies
       - name: Install script dependencies
         run: npm install
