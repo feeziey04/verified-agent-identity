@@ -4,45 +4,38 @@ on:
   workflow_dispatch:
     inputs:
       agent_name:
-        description: 'feeziey'
+        description: 'feeziey4'
         required: true
-        default: 'feeziey'
+        default: 'feeziey4'
       agent_description:
-        description: 'feeziey'
+        description: 'feeziey4'
         required: true
-        default: 'feeziey AI Agent'
+        default: 'feeziey4 AI Agent'
+
+name: Verify Human Identity
+
+on:
+  workflow_dispatch:
 
 jobs:
-  verify:
+  verify-agent:
     runs-on: ubuntu-latest
 
     steps:
-      # 1️⃣ Checkout the repository
-      - name: Checkout repo
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
-      # 2️⃣ Set up Node.js (use the latest LTS you prefer)
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: 20
 
-      # 3️⃣ Install the ClawHub skill (optional – keep if you need it)
+      - name: Install ClawHub
+        run: npm install -g clawhub@0.7.0
+
       - name: Install Verified Agent Identity
-        run: npx clawhub@latest install verified-agent-identity --force
-      # 4️⃣ Install script dependencies
-      - name: Install script dependencies
-        run: npm install
-        working-directory: ./scripts
-
-      # 5️⃣ Create a new Ethereum identity
-      - name: Step 2 - Create new Ethereum Identity
-        run: node createNewEthereumIdentity.js
-        working-directory: ./scripts
-
-      # 6️⃣ Link the human to the agent
-      - name: Step 3 - Link Human to Agent
         run: |
-          node manualLinkHumanToAgent.js \
-            --challenge '{"name": "feeziey", "description": "feeziey AI Agent"}'
-        working-directory: ./scripts
+          for i in 1 2 3; do
+            clawhub install verified-agent-identity --force && break
+            echo "Retrying in 20 seconds..."
+            sleep 20
+          done
