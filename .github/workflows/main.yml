@@ -16,6 +16,7 @@ jobs:
   verify:
     runs-on: ubuntu-latest
 
+    # Force all JavaScript actions to use Node.js 24
     env:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
@@ -26,7 +27,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 22  # Node runtime for your scripts
 
       - name: Step 1 - Install ClawHub skill
         run: npx clawhub@latest install verified-agent-identity
